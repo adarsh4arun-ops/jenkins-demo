@@ -20,10 +20,8 @@ pipeline {
                 echo 'Setting up Python virtual environment'
                 bat """
                     %PYTHON_EXE% -m venv %VENV_DIR%
-                    %VENV_DIR%\\Scripts\\pip install --upgrade pip
-                    if exist requirements.txt (
-                        %VENV_DIR%\\Scripts\\pip install -r requirements.txt
-                    )
+                    %VENV_DIR%\\Scripts\\python.exe -m pip install --upgrade pip
+                    %VENV_DIR%\\Scripts\\pip install -r requirements.txt
                 """
             }
         }
@@ -33,7 +31,7 @@ pipeline {
                 echo 'Checking code quality with flake8'
                 bat """
                     %VENV_DIR%\\Scripts\\pip install flake8
-                    %VENV_DIR%\\Scripts\\flake8 calculator tests
+                    %VENV_DIR%\\Scripts\\flake8 main.py test_math_ops.py
                 """
             }
         }
@@ -43,7 +41,7 @@ pipeline {
                 echo 'Running unit tests with pytest'
                 bat """
                     %VENV_DIR%\\Scripts\\pip install pytest
-                    %VENV_DIR%\\Scripts\\pytest --junitxml=report.xml
+                    %VENV_DIR%\\Scripts\\pytest --junitxml=report.xml test_math_ops.py
                 """
             }
             post {
@@ -56,7 +54,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Archiving Python scripts'
-                archiveArtifacts artifacts: '**/*.py', fingerprint: true
+                archiveArtifacts artifacts: 'main.py,test_math_ops.py', fingerprint: true
             }
         }
 
@@ -64,8 +62,7 @@ pipeline {
             steps {
                 echo 'Simulating deployment'
                 bat "mkdir deploy || echo Already exists"
-                bat "xcopy calculator deploy /E /Y"
-                bat "xcopy tests deploy /E /Y"
+                bat "xcopy main.py test_math_ops.py deploy /E /Y"
             }
         }
     }
