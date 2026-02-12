@@ -62,13 +62,15 @@ pipeline {
             }
         }
 
-        stage('Deploy (Simulated)') {
-            steps {
-                echo 'Simulating deployment'
-                bat "mkdir deploy || echo Already exists"
-                bat "xcopy main.py test_math_ops.py deploy /E /Y"
-            }
-        }
+    stage('Deploy (Simulated)') {
+    steps {
+        echo 'Simulating deployment'
+        bat "mkdir deploy || echo Already exists"
+        bat "copy main.py deploy\\"
+        bat "copy test_math_ops.py deploy\\"
+    }
+}
+
     }
 
     post {
