@@ -11,7 +11,7 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                bat 'python app.py'
+                bat 'python main.py'
             }
         }
     }
