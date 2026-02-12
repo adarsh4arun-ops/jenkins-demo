@@ -11,7 +11,7 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                bat 'python main.py'
+                bat 'C:\Users\student\AppData\Local\Programs\Python\Python312\python main.py'
             }
         }
     }
